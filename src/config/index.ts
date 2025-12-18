@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const siteConfig: Metadata = {
-  title: 'Docs | Google Docs Clone',
-  description: 'Full-stack Realtime Google Docs Clone using Next.js 15 and Convex.',
+  title: 'Docs | Realtime Docs Editor',
+  description: 'Full-stack Realtime Docs Editorusing Next.js 15 and Convex.',
   keywords: [
     'reactjs',
     'nextjs',
@@ -47,11 +47,11 @@ export const siteConfig: Metadata = {
     'lucide-react',
   ] as Array<string>,
   authors: {
-    name: 'Sanidhya Kumar Verma',
-    url: 'https://github.com/sanidhyy',
+    name: 'Rahul Kumar',
+    url: 'https://github.com/Rahul190556/Realtime_Docs_Editor',
   },
 } as const;
 
 export const links = {
-  sourceCode: 'https://github.com/sanidhyy/google-docs-clone',
+  sourceCode: 'https://github.com/Rahul190556/Realtime_Docs_Editor',
 } as const;
