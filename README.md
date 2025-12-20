@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Realtime Docs Editor
 
-## Getting Started
+A Google Docs–like **real-time collaborative document editor** built using modern web technologies.  
+This project demonstrates **CRDT-based collaboration**, **serverless backend architecture**, and **production-ready deployment**, making it ideal for showcasing real-time system design skills.
 
-First, run the development server:
+
+## 🚀 Realtime Docs Editor — Overview
+
+### ✨ Features
+- Real-time multi-user editing with live cursors and presence
+- Conflict-free collaboration using CRDTs
+- Rich-text editing (tables, images, colors, task lists)
+- Secure authentication and access control
+- Responsive, modern UI with Tailwind CSS
+
+### 🧠 Tech Stack
+- **Frontend:** Next.js 15, React 19, Tailwind CSS
+- **Editor:** TipTap (ProseMirror-based)
+- **Realtime:** Liveblocks (CRDT-based sync & presence)
+- **Backend & DB:** Convex (serverless backend + reactive database)
+- **Authentication:** Clerk
+
+### Architecture Flow
+
+![Architecture](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/architecture.png)
+
+
+### Architecture Responsibilities
+
+- **Next.js / React**
+  - Renders UI and routes documents
+  - Handles user interactions and editor state
+- **TipTap**
+  - Manages rich-text editing and document structure
+- **Liveblocks**
+  - Synchronizes edits in real time using CRDTs
+  - Handles cursors, presence, and collaboration state
+- **Convex**
+  - Stores document metadata and snapshots
+  - Handles permissions and backend logic
+- **Clerk**
+  - Authenticates users and provides secure identity via JWT
+
+This separation ensures the system is **scalable, maintainable, and production-ready**.
+
+
+
+## 🔁 How Concurrent Editing Works
+
+- Each user edits the document **locally** for instant feedback
+- Changes are sent as **small operations**, not full document updates
+- Liveblocks uses **CRDTs (Conflict-free Replicated Data Types)** to merge edits
+- All users converge to the same document state automatically
+- No locking, no overwriting, no race conditions
+
+This allows **multiple users (10+ or more)** to edit the same document smoothly.
+
+
+
+## ⚙️ Local Development Setup
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm
+- Accounts on Convex, Liveblocks, and Clerk (free tiers are sufficient)
+  
+![Image2](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image2.png)
+![Image1](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image1.png)
+
+
+### Installation
 
 ```bash
+git clone <your-repo-url>
+cd my-app
+npm install
+
+Set Environment variables:
+NEXT_PUBLIC_CONVEX_URL=https://<deployment-id>.convex.cloud
+CLERK_ISSUER_URL=https://<your-clerk-id>.clerk.accounts.dev
+NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY=pk_live_xxx
+LIVEBLOCKS_SECRET_KEY=sk_live_xxx
+
+Run Locally:
+npx convex dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open http://localhost:3000 to view the app.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
