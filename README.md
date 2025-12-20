@@ -55,7 +55,9 @@ This separation ensures the system is **scalable, maintainable, and production-r
 
 This allows **multiple users (10+ or more)** to edit the same document smoothly.
 
-
+  
+![Image2](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image2.png)
+![Image1](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image1.png)
 
 ## ⚙️ Local Development Setup
 
@@ -63,11 +65,7 @@ This allows **multiple users (10+ or more)** to edit the same document smoothly.
 - Node.js (v18 or higher)
 - npm
 - Accounts on Convex, Liveblocks, and Clerk (free tiers are sufficient)
-  
-![Image2](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image2.png)
-![Image1](https://github.com/Rahul190556/Realtime_Docs_Editor/blob/e34836a3030dafd1de0ab348665986785db8cda1/image1.png)
-
-
+- 
 ### Installation
 
 ```bash
