@@ -65,7 +65,7 @@ This allows **multiple users (10+ or more)** to edit the same document smoothly.
 - Node.js (v18 or higher)
 - npm
 - Accounts on Convex, Liveblocks, and Clerk (free tiers are sufficient)
-- 
+  
 ### Installation
 
 ```bash
