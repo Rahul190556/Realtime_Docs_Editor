@@ -7,18 +7,27 @@ export const create = mutation({
   args: {
     title: v.optional(v.string()),
     initialContent: v.optional(v.string()),
+    roomId: v.optional(v.string()), // Add roomId to the arguments
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
 
     if (!user) throw new ConvexError('Unauthorized!');
 
+    console.log('Creating document for user:', user.subject);
+
     const organizationId = (user.organization_id ?? undefined) as string | undefined;
+
+    
+    if (!organizationId) {
+      console.warn('User does not belong to an organization. organizationId is undefined.');
+    }
 
     const documentId = await ctx.db.insert('documents', {
       title: args.title ?? 'Untitled Document',
       ownerId: user.subject,
       organizationId,
+      roomId: args.roomId, // Add roomId here
       initialContent: args.initialContent,
     });
 
@@ -26,8 +35,62 @@ export const create = mutation({
   },
 });
 
+
+// export const get = query({
+//   args: {
+//     paginationOpts: paginationOptsValidator,
+//     search: v.optional(v.string()),
+//     organizationId: v.optional(v.string()), // Ensure organizationId is validated
+//     ownerId: v.optional(v.string()),       // Ensure ownerId is validated
+//   },
+//   handler: async (ctx, { search, paginationOpts, organizationId, ownerId }) => {
+//     const user = await ctx.auth.getUserIdentity();
+
+//     if (!user) throw new ConvexError('Unauthorized!');
+
+//     console.log('Fetching documents for user:', user.subject, 'in organization:', organizationId);
+
+//     // Search within organization
+//     if (search && organizationId) {
+//       return await ctx.db
+//         .query('documents')
+//         .withSearchIndex('search_title', (q) => q.search('title', search).eq('organizationId', organizationId))
+//         .paginate(paginationOpts);
+//     }
+
+//     // Search within personal
+//     if (search && ownerId) {
+//       return await ctx.db
+//         .query('documents')
+//         .withSearchIndex('search_title', (q) => q.search('title', search).eq('ownerId', ownerId))
+//         .paginate(paginationOpts);
+//     }
+
+//     // All organization docs
+//     if (organizationId) {
+//       return await ctx.db
+//         .query('documents')
+//         .withIndex('by_organization_id', (q) => q.eq('organizationId', organizationId))
+//         .paginate(paginationOpts);
+//     }
+
+//     // All personal docs
+//     if (ownerId) {
+//       return await ctx.db
+//         .query('documents')
+//         .withIndex('by_owner_id', (q) => q.eq('ownerId', ownerId))
+//         .paginate(paginationOpts);
+//     }
+
+//     throw new ConvexError('Invalid query context: organizationId or ownerId must be provided.');
+//   },
+// });
+
 export const get = query({
-  args: { paginationOpts: paginationOptsValidator, search: v.optional(v.string()) },
+  args: {
+    paginationOpts: paginationOptsValidator,
+    search: v.optional(v.string()),
+  },
   handler: async (ctx, { search, paginationOpts }) => {
     const user = await ctx.auth.getUserIdentity();
 
@@ -35,7 +98,9 @@ export const get = query({
 
     const organizationId = (user.organization_id ?? undefined) as string | undefined;
 
-    // search within organization
+    console.log('Fetching documents for user:', user.subject, 'in organization:', organizationId);
+
+    // Search within organization
     if (search && organizationId) {
       return await ctx.db
         .query('documents')
@@ -43,7 +108,7 @@ export const get = query({
         .paginate(paginationOpts);
     }
 
-    // search within personal
+    // Search within personal
     if (search) {
       return await ctx.db
         .query('documents')
@@ -51,7 +116,7 @@ export const get = query({
         .paginate(paginationOpts);
     }
 
-    // all organization docs
+    // All organization docs
     if (organizationId) {
       return await ctx.db
         .query('documents')
@@ -59,13 +124,16 @@ export const get = query({
         .paginate(paginationOpts);
     }
 
-    // all personal docs
-    return await ctx.db
-      .query('documents')
-      .withIndex('by_owner_id', (q) => q.eq('ownerId', user.subject))
-      .paginate(paginationOpts);
+    // All personal docs
+      return await ctx.db
+        .query('documents')
+        .withIndex('by_owner_id', (q) => q.eq('ownerId', user.subject))
+        .paginate(paginationOpts);
+    
   },
 });
+
+
 
 export const getByIds = query({
   args: { ids: v.array(v.id('documents')) },
@@ -107,8 +175,14 @@ export const removeById = mutation({
     const document = await ctx.db.get(args.id);
     if (!document) throw new ConvexError('Document not found!');
 
+    const organizationId = (user.organization_id ?? undefined) as string | undefined;
+
     const isOwner = document.ownerId === user.subject;
-    if (!isOwner) throw new ConvexError('Unauthorized!');
+    // const isOrganizationMember = document.organizationId === organizationId;
+    const isOrganizationMember = !!(document.organizationId && document.organizationId === organizationId);
+
+
+    if (!isOwner && !isOrganizationMember) throw new ConvexError('Unauthorized!');
 
     await ctx.db.delete(args.id);
 
@@ -127,7 +201,12 @@ export const updateById = mutation({
     if (!document) throw new ConvexError('Document not found!');
 
     const isOwner = document.ownerId === user.subject;
-    if (!isOwner) throw new ConvexError('Unauthorized!');
+     const organizationId = (user.organization_id ?? undefined) as string | undefined;
+    const isOrganizationMember = !!(document.organizationId && document.organizationId === organizationId);
+
+
+    if (!isOwner && !isOrganizationMember) throw new ConvexError('Unauthorized!');
+    
 
     await ctx.db.patch(args.id, { title: args.title });
 

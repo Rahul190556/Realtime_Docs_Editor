@@ -4,6 +4,8 @@ import { usePaginatedQuery } from 'convex/react';
 
 import { api } from '@/../convex/_generated/api';
 import { useSearchParam } from '@/hooks/use-search-param';
+import { useOrganization, useUser } from '@clerk/nextjs';
+
 
 import { DocumentsTable } from './documents-table';
 import { Navbar } from './navbar';

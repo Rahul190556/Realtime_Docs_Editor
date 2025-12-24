@@ -40,8 +40,11 @@ export const Room = ({ children, roomId }: PropsWithChildren<RoomProps>) => {
       authEndpoint={async () => {
         const endpoint = '/api/liveblocks-auth';
         const room = roomId;
+        console.log('Fetching Liveblocks auth for room:', roomId);
 
         const response = await fetch(endpoint, { method: 'POST', body: JSON.stringify({ room }) });
+
+        console.log('Liveblocks auth response:', response);
 
         return await response.json();
       }}

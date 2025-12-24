@@ -7,7 +7,7 @@ import type { PropsWithChildren } from 'react';
 
 import { FullscreenLoader } from './fullscreen-loader';
 
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL || 'https://neighborly-stork-249.convex.cloud');
 
 export function ConvexClientProvider({ children }: PropsWithChildren) {
   return (
