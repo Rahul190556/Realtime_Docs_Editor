@@ -37,6 +37,7 @@ interface EditorProps {
 }
 
 export const Editor = ({ initialContent }: EditorProps) => {
+  console.log('Editor initialContent:', initialContent);
   const liveblocks = useLiveblocksExtension({
     initialContent,
     offlineSupport_experimental: true,

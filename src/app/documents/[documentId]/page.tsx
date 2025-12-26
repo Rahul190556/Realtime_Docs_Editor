@@ -14,6 +14,7 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
   const { documentId } = await params;
 
   const { getToken } = await auth();
+  console.log("Token function acquired from auth.", getToken);
   const token = (await getToken({ template: 'convex' })) ?? undefined;
 
   if (!token) throw new Error('Unauthorized!');

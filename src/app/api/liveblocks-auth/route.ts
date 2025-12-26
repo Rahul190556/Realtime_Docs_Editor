@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   const isOwner = document.ownerId === user.id;
   console.log('isOwner:', isOwner);
   console.log('document.organizationId:', document.organizationId);
-  console.log('sessionClaims:', sessionClaims);
+
   if (!(sessionClaims?.o as { id: string })?.id) {
     console.warn('Session claims are missing org_id. Ensure Clerk is configured to include organization context.');
   }
@@ -45,11 +45,8 @@ export async function POST(req: NextRequest) {
   console.log('User ID:', user.id);
   console.log('Document ID:', room);
   console.log('Document Organization ID:', document.organizationId);
-  console.log('Session Claims Organization ID:', sessionClaims.org_id);
 
-  console.log('Debugging shared organization access:');
-  console.log('Document Organization ID:', document.organizationId);
-  console.log('Session Claims Organization ID:', sessionClaims.org_id);
+
 
   if (!isOwner && !isOrganizationMember) {
     console.log('Access denied: User is neither the owner nor a member of the organization.');
