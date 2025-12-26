@@ -6,7 +6,7 @@ import { ConvexHttpClient } from 'convex/browser';
 import { api } from '@/../convex/_generated/api';
 import type { Id } from '@/../convex/_generated/dataModel';
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL||"https://neighborly-stork-249.convex.cloud");
 
 export async function getDocuments(ids: Id<'documents'>[]) {
   return await convex.query(api.documents.getByIds, { ids });
